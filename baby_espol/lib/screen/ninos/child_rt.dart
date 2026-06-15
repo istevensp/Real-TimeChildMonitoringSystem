@@ -1,0 +1,72 @@
+import 'package:baby_espol/screen/ninos/funcion_ninos.dart';
+import 'package:baby_espol/estilo/texto.dart';
+import 'package:baby_espol/datos/user.dart';
+import 'package:flutter/material.dart';
+
+class Child_RT extends StatefulWidget {
+  final Size screenSize;
+  final user usuario;
+
+  Child_RT({required this.screenSize, required this.usuario, Key? key})
+      : super(key: key);
+
+  @override
+  _Child_RT createState() => _Child_RT();
+}
+
+class _Child_RT extends State<Child_RT> {
+  List<Widget> listaNinos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    cargarNinos();
+  }
+
+  void cargarNinos() async {
+    List<Widget> ninos =
+        await lista_nino_rt(context, widget.usuario, widget.screenSize);
+
+    setState(() {
+      listaNinos = ninos;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.green[300],
+          elevation: 1,
+          title: Row(
+            children: [
+              texto('Niños', Colors.white, 30, FontWeight.bold),
+            ],
+          ),
+        ),
+        body: body());
+  }
+
+  Widget body() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(20.0, 32.0, 20.0, 32.0),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (Widget ninos in listaNinos)
+                    Column(
+                      children: [ninos, SizedBox(height: 15)],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

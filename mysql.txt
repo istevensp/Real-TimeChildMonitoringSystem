@@ -1,0 +1,126 @@
+espolbaby@gmail.com
+Admi_123
+DROP DATABASE baby_espol;
+CREATE DATABASE IF NOT EXISTS baby_espol;
+
+USE baby_espol;
+
+CREATE TABLE user (
+    usuario VARCHAR(255) PRIMARY KEY,
+    contrasena VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
+    correo VARCHAR(255) NOT NULL,
+    telefono VARCHAR(15) NOT NULL,
+    tipo VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE bracelet (
+    id_pulsera INT AUTO_INCREMENT PRIMARY KEY,
+    longitud DOUBLE NOT NULL,
+    latitud DOUBLE NOT NULL,
+    pulso DOUBLE NOT NULL,
+    bateria INT NOT NULL,
+    peligro VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE class (
+    clase VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE child (
+    id_nino INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
+    id_pulsera INT,
+    FOREIGN KEY (id_pulsera) REFERENCES bracelet(id_pulsera)
+);
+
+CREATE TABLE user_child (
+    usuario VARCHAR(255),
+    id_nino INT,
+    clase VARCHAR(255),
+    PRIMARY KEY (usuario, id_nino),
+    FOREIGN KEY (usuario) REFERENCES user(usuario),
+    FOREIGN KEY (id_nino) REFERENCES child(id_nino),
+    FOREIGN KEY (clase) REFERENCES class(clase)
+);
+
+CREATE TABLE activity (
+    id_act INT AUTO_INCREMENT PRIMARY KEY,
+    dia VARCHAR(255) NOT NULL,
+    titulo VARCHAR(255) NOT NULL,
+    clase VARCHAR(255),
+    FOREIGN KEY (clase) REFERENCES class(clase)
+);
+
+CREATE TABLE photo (
+    enlace VARCHAR(255),
+    id_act INT,
+    FOREIGN KEY (id_act) REFERENCES activity(id_act)
+);
+
+CREATE TABLE advertisement (
+    id_anuncio INT AUTO_INCREMENT PRIMARY KEY,
+    dia VARCHAR(255) NOT NULL,
+    titulo VARCHAR(255) NOT NULL,
+    clase VARCHAR(255),
+    FOREIGN KEY (clase) REFERENCES class(clase)
+);
+
+CREATE TABLE message(
+    id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(255) NOT NULL,
+    mensaje VARCHAR(255) NOT NULL,
+    id_anuncio INT,
+    FOREIGN KEY (id_anuncio) REFERENCES advertisement(id_anuncio)
+);
+
+INSERT INTO user values ('bpuero', '123', 'Boris', 'Puero', 'brunopuero@outlook.com', '12', 'representante');
+INSERT INTO user values ('isalto', '123', 'Ivonn', 'Del Salto', 'correo2@example.com', '34', 'representante');
+INSERT INTO user values ('cvaccaro', '123', 'Christopher', 'Vaccaro', 'correo3@example.com', '56', 'tutor');
+INSERT INTO user values ('ccedeno', '123', 'Carlos', 'Cedeño', 'correo4@example.com', '78', 'tutor');
+INSERT INTO user values ('igarcia', '123', 'Ignacio', 'Garcia', 'correo5@example.com', '90', 'coordinador');
+
+INSERT INTO bracelet values (1, -2.1479498884355229, -79.96408715257669, 2.0, 100, true);
+INSERT INTO bracelet values (2, -2.1479498884355229, -79.96408715257669, 2.0, 100, false);
+INSERT INTO bracelet values (3, -2.1479498884355229, -79.96408715257669, 0.0, 100, false);
+
+INSERT INTO class values ('A');
+INSERT INTO class values ('B');
+
+INSERT INTO child values (1, 'Diana', 'Puero', 1);
+INSERT INTO child values (2, 'Bryan', 'Puero', 2);
+INSERT INTO child values (3, 'Ericka', 'Puero', 3);
+
+INSERT INTO user_child values ('bpuero', 1, 'A');
+INSERT INTO user_child values ('bpuero', 2, 'A');
+INSERT INTO user_child values ('bpuero', 3, 'B');
+INSERT INTO user_child values ('isalto', 2, 'A');
+INSERT INTO user_child values ('cvaccaro', 1, 'A');
+INSERT INTO user_child values ('cvaccaro', 2, 'A');
+INSERT INTO user_child values ('ccedeno', 3, 'B');
+INSERT INTO user_child values ('igarcia', 1, 'A');
+INSERT INTO user_child values ('igarcia', 2, 'A');
+INSERT INTO user_child values ('igarcia', 3, 'B');
+
+INSERT INTO activity values (1, '12/8', 'Actividad 1', 'A');
+INSERT INTO activity values (2, '12/8', 'Actividad 2', 'A');
+INSERT INTO activity values (3, '12/8', 'Actividad 3', 'B');
+
+INSERT INTO advertisement values (1, '12/8', 'Anuncio 1', 'A');
+INSERT INTO advertisement values (2, '12/8', 'Anuncio 2', 'B');
+INSERT INTO advertisement values (3, '12/8', 'Anuncio 3', 'B');
+INSERT INTO advertisement values (4, '12/16', 'Anuncio 4', 'A');
+
+INSERT INTO message values (1, 'cvaccaro', 'Anuncio 1', 1);
+INSERT INTO message values (2, 'igarcia', 'Anuncio 2', 2);
+INSERT INTO message values (3, 'bpuero', 'Test 1.1', 1);
+INSERT INTO message values (4, 'cvaccaro', 'Test 1.2', 1);
+
+INSERT INTO photo values ('16jkdlaNut9SJax0zGpwjUBcUL6VmsGWJ', 1);
+INSERT INTO photo values ('1BsPP9CBQHJiLX6bWSAedGWZlXZUpB_KY', 1);
+INSERT INTO photo values ('1pBdWmyflUCW6aIYXQQm9hoGuGZYCTPdI', 2);
+INSERT INTO photo values ('1VrYFGuDNp4-8KVhFCrhwCu2v7gYWIoBg', 2);
+INSERT INTO photo values ('1ecdnLzI778J3fSTdWQxqbHTamPN8zSmr', 3);
+INSERT INTO photo values ('1woP_kJbl-EH-x9f2WCt-CxLy6EF5D5io', 3);
