@@ -5,9 +5,9 @@ Raw responses and analysis of the usability surveys reported in:
 > **"A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System for
 > Smart Childcare Centers"**, accepted as a poster at IEEE ISC2 2026.
 
-**48 participants** from two child development centers in Guayaquil, Ecuador, answered
-**three separate questionnaires**, one per role. Every answer used a five-point
-Likert scale.
+**48 participants** from two child development centers in Guayaquil, Ecuador,
+answered **three separate questionnaires**, one per role. Every answer used a
+five-point Likert scale.
 
 | Group | n | Items | Ratings | Mean | SD | 4 or 5 |
 |---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@ Likert scale.
 evaluation/
 ├── EvaluationDescription.md   this file
 ├── analyze_surveys.py         converts answers to 1-5 and computes the statistics
-├── results.md                 every item with its scale, mean, median and SD
+├── results.md                 every item: scale, answers chosen, mean, median, SD
 └── data/
     ├── questions.md           every item and scale, in Spanish and English
     ├── parents_responses.xlsx
@@ -78,10 +78,10 @@ Spanish strings. `analyze_surveys.py` maps them to 1-5:
 | Scale | 1 | 2 | 3 | 4 | 5 |
 |---|---|---|---|---|---|
 | Usefulness | Not at all useful | Slightly useful | Neutral | Useful | Very useful |
-| Intention | Definitely not | Probably not | Maybe | Probably yes | Definitely yes |
+| Agreement | Definitely not | Probably not | Maybe | Probably yes | Definitely yes |
 | Satisfaction | Very dissatisfied | Dissatisfied | Neutral | Satisfied | Very satisfied |
 | Ease of use | Very difficult | Difficult | Neutral | Easy | Very easy |
-| Perceived quality | Bad | Fair | Good | Very good | Excellent |
+| Quality | Bad | Fair | Good | Very good | Excellent |
 
 [`data/questions.md`](data/questions.md) gives the Spanish option recorded for
 each point and lists which items used each scale;
@@ -109,11 +109,11 @@ The script normalises capitalisation and accents before counting.
 |---|---|---|---|---|
 | 7 | Activity log of their children | usefulness | **4.76** | 0.50 |
 | 3 | Real-time location inside the center | ease of use | **4.73** | 0.52 |
-| 5 | Would recommend to other centers | intention | **4.73** | 0.52 |
+| 5 | Would recommend to other centers | agreement | **4.73** | 0.52 |
 | 8 | Children list, as a representative | usefulness | **4.70** | 0.64 |
 | 1 | Messaging | usefulness | **4.55** | 0.75 |
 | 6 | Overall satisfaction | satisfaction | **4.45** | 0.62 |
-| 4 | Functions sufficient to signal a child leaving | intention | **4.30** | 0.85 |
+| 4 | Functions sufficient to signal a child leaving | agreement | **4.30** | 0.85 |
 | 2 | Children list, as used by tutors | usefulness | **4.27** | 0.76 |
 
 Items 2 and 8 ask about the same screen from two points of view. The one that
@@ -123,9 +123,9 @@ is not the respondent's own role scores **0.43 lower**.
 
 | # | Item | Scale | Mean | SD |
 |---|---|---|---|---|
-| 7 | Would recommend to other centers | intention | **4.82** | 0.60 |
+| 7 | Would recommend to other centers | agreement | **4.82** | 0.60 |
 | 4 | Real-time location of children in their care | ease of use | **4.73** | 0.47 |
-| 6 | Functions sufficient to signal a child leaving | intention | **4.64** | 0.81 |
+| 6 | Functions sufficient to signal a child leaving | agreement | **4.64** | 0.81 |
 | 1 | Messaging with parents and coordination | usefulness | **4.55** | 0.82 |
 | 5 | Overall usefulness for their work | quality | **4.55** | 0.69 |
 | 2 | Daily activities with photographic evidence | usefulness | **4.45** | 0.69 |
@@ -136,12 +136,12 @@ is not the respondent's own role scores **0.43 lower**.
 | # | Item | Scale | Mean | SD |
 |---|---|---|---|---|
 | 4 | Real-time location inside the center | ease of use | **5.00** | 0.00 |
-| 7 | Would recommend to other centers | intention | **5.00** | 0.00 |
+| 7 | Would recommend to other centers | agreement | **5.00** | 0.00 |
 | 1 | Messaging | usefulness | **4.75** | 0.50 |
 | 3 | Children list of the whole center | usefulness | **4.75** | 0.50 |
-| 6 | Functions sufficient to signal a child leaving | intention | **4.75** | 0.50 |
+| 6 | Functions sufficient to signal a child leaving | agreement | **4.75** | 0.50 |
 | 5 | Overall usefulness for their role | quality | **4.50** | 0.58 |
-| 2 | Provided the information needed to supervise activities | intention | **4.25** | 0.96 |
+| 2 | Provided the information needed to supervise activities | agreement | **4.25** | 0.96 |
 
 **With n = 4, each coordinator is 25 % of the result.** These means should
 always be read with the n beside them.
@@ -164,7 +164,7 @@ choose an option below the midpoint. This is consistent with **courtesy bias**
 in a demonstration setting, and the paper reports it as such rather than
 presenting the 4.6 average on its own.
 
-Other limits of this evaluation, also stated in the paper:
+Other limits of this evaluation:
 
 - **No task-based testing.** No completion times, success rates or errors were
   recorded; this was not a task-based usability study.
@@ -173,8 +173,11 @@ Other limits of this evaluation, also stated in the paper:
 - **Nothing longitudinal.** The files carry no timestamps, so not even the
   order or dates of the responses can be established.
 - **Nothing per center.** The files do not record which center a respondent
-  belongs to.
+  belongs to. Unlike the three above, this one is not a limitation the paper
+  discusses — the paper does not compare centers — but it constrains anyone
+  reusing these files.
 
-These are the reasons the paper describes the study as a preliminary
-assessment of perceived usability, and lists structured usability instruments
-and task-completion measurements as future work.
+This is why the paper reports the survey as capturing perceived usability and
+usefulness **rather than long-term adoption or operational impact**, and lists
+structured usability instruments, task-completion measurements and longitudinal
+use as future work.

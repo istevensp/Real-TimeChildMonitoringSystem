@@ -75,7 +75,7 @@ Wearable Bracelet ──▶ Flask Backend API ──▶ MySQL Database
 The mobile application never reaches the database directly: every read and
 write goes through the backend API.
 
-The wearable bracelet provides monitoring data such as location, pulse, battery level, and danger status. The backend receives and stores this information in the database. The mobile application consumes the backend endpoints to display child information, activities, announcements, and alerts to authorized users.
+The wearable bracelet provides monitoring data such as location, pulse, battery level, and danger status. Indoor location comes from low-power Bluetooth beacons with fixed coordinates, placed in each classroom and in the playground: the bracelet identifies the nearest beacon and reports its coordinates through the cellular module. This gives room-level granularity indoors, where satellite positioning does not reach, and is what fills the `latitud` and `longitud` fields of the `bracelet` table. The backend receives and stores this information in the database. The mobile application consumes the backend endpoints to display child information, activities, announcements, and alerts to authorized users.
 
 > **The bracelet firmware is not part of this repository.** What is published
 > here is the backend, the mobile application, the database schema and the
