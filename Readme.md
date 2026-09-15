@@ -1,4 +1,4 @@
-# 👶 Real-Time Child Monitoring System — Baby Espol Child Development Center
+# 👶 Real-Time Child Monitoring System — Baby ESPOL Child Development Center
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-Backend-black.svg)](https://flask.palletsprojects.com/)
@@ -6,11 +6,20 @@
 [![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1.svg)](https://www.mysql.com/)
 [![Status](https://img.shields.io/badge/status-research%20prototype-yellow.svg)]()
 
-A prototype mobile and backend system built to support real-time child monitoring at the Baby Espol Child Development Center. The project integrates a **Flutter**-based mobile application, a **Flask** backend service, and a **MySQL** database to manage children, users, bracelets, activities, announcements, photos, messages, and alert notifications.
+A prototype mobile and backend system built to support real-time child monitoring at the Baby ESPOL Child Development Center. The project integrates a **Flutter**-based mobile application, a **Flask** backend service, and a **MySQL** database to manage children, users, bracelets, activities, announcements, photos, messages, and alert notifications.
 
 This repository contains the implementation artifacts associated with the research paper:
 
-> **"Real-time Child Monitoring System for Baby Espol Child Development Center"**
+> **"A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System for Smart Childcare Centers"**
+>
+> Accepted as a poster at IEEE ISC2 2026.
+
+The prototype was evaluated with **48 participants at two child development
+centers** — 33 parents, 11 tutors and 4 coordinators — who explored the
+application and answered a questionnaire for their role. The raw responses, the
+analysis script and the results are in
+[`evaluation/`](evaluation/EvaluationDescription.md), so every figure the paper
+reports about the survey can be recomputed from this repository.
 
 ---
 
@@ -22,6 +31,7 @@ This repository contains the implementation artifacts associated with the resear
 - [Technologies Used](#-technologies-used)
 - [Repository Structure](#-repository-structure)
 - [Installation and Execution](#-installation-and-execution)
+- [Usability Evaluation](#-usability-evaluation)
 - [Additional Documentation](#-additional-documentation)
 - [Security Notice](#-security-notice)
 - [Research Context](#-research-context)
@@ -56,19 +66,21 @@ The system was designed to improve child supervision through a digital platform 
 The prototype follows a three-layer software architecture connected to a wearable monitoring device:
 
 ```text
-Wearable Bracelet
-        │
-        ▼
-Flask Backend API
-        │
-        ▼
-MySQL Database
-        │
-        ▼
-Flutter Mobile Application
+Wearable Bracelet ──▶ Flask Backend API ──▶ MySQL Database
+                            ▲
+                            │
+                   Flutter Mobile Application
 ```
 
+The mobile application never reaches the database directly: every read and
+write goes through the backend API.
+
 The wearable bracelet provides monitoring data such as location, pulse, battery level, and danger status. The backend receives and stores this information in the database. The mobile application consumes the backend endpoints to display child information, activities, announcements, and alerts to authorized users.
+
+> **The bracelet firmware is not part of this repository.** What is published
+> here is the backend, the mobile application, the database schema and the
+> evaluation data. The backend receives the danger status already computed by
+> the device, so how the device decides it cannot be verified from this code.
 
 ---
 
@@ -110,17 +122,22 @@ The wearable bracelet provides monitoring data such as location, pulse, battery 
 
 ```text
 .
-├── README.md
-├── Backend Description.md
-├── Database Description.md
-├── app.py
-├── mysql.txt
-├── AndroidManifest.xml
-├── MainActivity.kt
-├── build.gradle
-├── analysis_options.yaml
-├── .gitignore
-└── assets/
+├── Readme.md
+├── BackendDescription.md
+├── DatabaseDescription.md
+├── app.py                     Flask backend service
+├── mysql.txt                  database schema and seed data
+├── baby_espol/                Flutter mobile application
+│   ├── lib/                   application source
+│   ├── assets/
+│   ├── android/  ios/  linux/  macos/
+│   └── pubspec.yaml
+└── evaluation/                usability survey data and analysis
+    ├── EvaluationDescription.md   method, results and limitations
+    ├── analyze_surveys.py     computes the statistics from the raw responses
+    ├── results.md             every item with its mean, median and SD
+    └── data/                  the three questionnaire exports
+        └── questions.md       every item in Spanish and English
 ```
 
 ---
@@ -193,6 +210,11 @@ python app.py
 
 By default, Flask will run the backend locally.
 
+> **Note:** the published `app.py` uses single underscores where Python
+> expects double ones — `Flask(_name_)` on line 8, and
+> `if _name_ == '_main_'` on line 406 — so it fails on import and the command
+> above starts nothing. Fix all three before the first run.
+
 ### 6. Run the Flutter Application
 
 Inside the Flutter project directory, run:
@@ -206,16 +228,63 @@ Make sure the mobile application is configured to point to the correct backend U
 
 ---
 
+## 📊 Usability Evaluation
+
+Three questionnaires were used, one per role, all on five-point Likert scales.
+Participants explored the application and its functions before answering;
+**they did not use it during a normal working day**, so the survey measures
+perceived usability and usefulness, not adoption.
+
+| Group | n | Ratings | Mean | SD | 4 or 5 |
+|---|---|---|---|---|---|
+| Parents | 33 | 264 | 4.56 | 0.67 | 90 % |
+| Tutors | 11 | 77 | 4.58 | 0.69 | 88 % |
+| Coordinators | 4 | 28 | 4.71 | 0.53 | 96 % |
+| **All** | **48** | **369** | **4.58** | **0.67** | **90 %** |
+
+The highest-rated items included the willingness to recommend the application
+and the location view, top-rated by tutors and coordinators. The lowest, at 4.25, was whether the application gave
+coordinators the information they need to supervise activities — which is the
+item closest to the purpose the system is built for, and it comes from only
+four people.
+
+**No rating in any questionnaire fell below the neutral midpoint.** The minimum
+of all 369 ratings is 3. That is consistent with courtesy bias in a
+demonstration setting, and it is reported as a limitation rather than left for
+the reader to notice.
+
+📄 **[Full evaluation: method, every item, and limitations](evaluation/EvaluationDescription.md)**
+
+- [`evaluation/results.md`](evaluation/results.md) — every item with its scale,
+  the answers people chose, mean, median and standard deviation.
+- [`evaluation/data/questions.md`](evaluation/data/questions.md) — every
+  question and response scale, in English and in the original Spanish.
+- [`evaluation/analyze_surveys.py`](evaluation/analyze_surveys.py) — reads the
+  three response files and recomputes everything; it holds no precomputed
+  numbers.
+
+---
+
 ## 📚 Additional Documentation
 
 For a more detailed technical explanation, see:
 
-- [Backend Description](Backend%20Description.md)
-- [Database Description](Database%20Description.md)
+- [Backend Description](BackendDescription.md)
+- [Database Description](DatabaseDescription.md)
+- [Usability Evaluation](evaluation/EvaluationDescription.md) — the three questionnaires, the
+  raw responses of the 48 participants, and the script that computes the
+  statistics reported in the paper
 
 ---
 
 ## 🔒 Security Notice
+
+> ⚠️ **This repository currently contains live credentials in source
+> files**, in `app.py` and in the first lines of `mysql.txt`: a database
+> password and a Google application password. **Treat them as compromised.**
+> They need to be revoked and removed from the working tree *and* from the git
+> history; deleting them in a new commit is not enough, because the old commits
+> still carry them.
 
 This repository corresponds to a **research prototype**. Before using it in a production environment, the following improvements are recommended:
 
@@ -232,7 +301,7 @@ This repository corresponds to a **research prototype**. Before using it in a pr
 
 ## 🔬 Research Context
 
-This project was developed as part of a research work focused on the design and implementation of a real-time child monitoring system for the Baby Espol Child Development Center. The prototype demonstrates how wearable devices, mobile applications, backend services, and relational databases can be integrated to support child safety, institutional communication, and monitoring record management.
+This project was developed as part of a research work focused on the design and implementation of a real-time child monitoring system for the Baby ESPOL Child Development Center. The prototype demonstrates how wearable devices, mobile applications, backend services, and relational databases can be integrated to support child safety, institutional communication, and monitoring record management.
 
 ---
 
@@ -244,6 +313,7 @@ This project is intended for academic and research purposes. The final license s
 
 ## 👤 Authors
 
-Developed as part of the research project:
+Developed at Escuela Superior Politécnica del Litoral (ESPOL), Guayaquil,
+Ecuador, as part of the research work behind:
 
-**Real-time Child Monitoring System for Baby Espol Child Development Center**
+**A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System for Smart Childcare Centers**
