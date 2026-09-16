@@ -5,7 +5,7 @@ import yagmail
 
 path = "/run/user/1000/gvfs/google-drive:host=gmail.com,user=espol.baby/0AE5zgfuPuhc7Uk9PVA/Imagenes/"
 
-app = Flask(_name_)
+app = Flask(__name__)
 db = pymysql.connect(
     host='localhost',
     user='root',
@@ -403,5 +403,5 @@ def login():
     except Exception as e:
         return jsonify({'error':'error'})
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)

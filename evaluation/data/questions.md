@@ -157,8 +157,6 @@ The Spanish original is written in the feminine throughout (*tutora*,
 | 6 | Do you consider the application's current functions sufficient to effectively indicate when a child leaves the child development center? | agreement | ¿Considera que las funciones actuales de la aplicación son suficientes para indicar de manera efectiva cuando un niño sale del CDI? |
 | 7 | Would you recommend using this mobile application to other child development centers? | agreement | ¿Recomendaría el uso de esta aplicación móvil a otros Centros de Desarrollo Infantil? |
 
-**Item 2 is the lowest-rated item of all three questionnaires** (4.25, n = 4)
-— though only by 0.02, over the parents' item 2 at 4.27, and it rests on four
-people. It asks whether the application gave coordinators the information they
-need to *supervise*, which is the closest item to the purpose the system is
-built for.
+**Item 2 is the lowest-rated item of all three questionnaires** (4.25, n = 4),
+lower than the parents' item 2 at 4.27 by 0.02. It asks whether the application
+gave coordinators the information they need to *supervise* activities.

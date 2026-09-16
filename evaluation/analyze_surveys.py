@@ -11,17 +11,14 @@ Requires openpyxl.
 Three separate questionnaires were used, one per role, each with its own
 wording. Item numbers are therefore NOT comparable across files.
 
-Three normalisation details that are easy to get wrong by hand:
+The surveys were administered at two child development centers in Guayaquil,
+Ecuador. The questions in the header row have been translated into English, but
+the answers are still the Spanish strings the forms recorded, because they are
+the raw data; data/questions.md has every item in both languages.
 
-  1. "Muy Facil" and "Muy facil" are the SAME answer, stored with different
-     capitalisation by the form. Counting them separately splits the parents'
-     76 % into 39 % and 36 %.
-  2. Accents vary between files, so answers are compared without them.
-  3. The questions in the header row have been translated into English, but
-     the answers are still the Spanish strings the forms recorded, because
-     they are the raw data. data/questions.md has every item in both
-     languages. The surveys were administered at two child development
-     centers in Guayaquil, Ecuador.
+Answers are compared in lower case and without accents, because capitalisation
+and accents vary between files ("Muy Facil" and "Muy facil" are the same
+answer).
 
 The five response scales, all five-point Likert:
 
@@ -71,8 +68,7 @@ ACCENTS = {"á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u", "ñ": "n"}
 #
 # The two lowest points of the ease-of-use scale are marked as inferred: no
 # respondent chose them, and the option list of that question was not kept, so
-# their exact wording is a reconstruction. Nothing depends on it, since an
-# option nobody chose contributes no rating.
+# their exact wording is a reconstruction.
 SCALES = [
     ("usefulness", [
         (1, "Not at all useful", "Nada útil"),
@@ -162,11 +158,9 @@ lines.append("")
 lines.append("Every item was answered on a five-point Likert scale. Standard "
              "deviations are sample standard deviations (n-1).")
 lines.append("")
-lines.append("*Distinct response patterns* counts how many of the rows are "
-             "different from each other. With a handful of options and "
-             "seven or eight questions, identical rows are expected; the "
-             "number is given so nobody has to guess whether they are "
-             "duplicates.")
+lines.append("*Distinct response patterns* counts how many of the rows "
+             "differ from each other. With a handful of options and seven or "
+             "eight questions, identical rows are expected.")
 
 sections = []
 

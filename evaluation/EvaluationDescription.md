@@ -34,9 +34,7 @@ evaluation/
 
 **The response files contain no identifying information**: no names, no e-mail
 addresses, no timestamps, no free-text fields. Every cell in every file is one
-of the scale options, and every column is a question. Whether the forms never
-collected identifying data or it was removed before export is not recorded
-here; what can be checked is that none is present.
+of the scale options, and every column is a question.
 
 **The questions have been translated into English; the answers have not.** The
 surveys were administered in Spanish, and the recorded answers are the raw
@@ -59,9 +57,8 @@ python analyze_surveys.py
 
 This rewrites [`results.md`](results.md), which lists every item with its
 question, its response scale, how many people chose each option, and the mean,
-median and standard deviation. The script reads only the three files in `data/`
-and holds no precomputed numbers, so any figure reported below can be checked
-by running it.
+median and standard deviation. The script reads only the three files in
+`data/`, so any figure reported below can be recomputed from the raw responses.
 
 ---
 
@@ -87,17 +84,15 @@ Spanish strings. `analyze_surveys.py` maps them to 1-5:
 each point and lists which items used each scale;
 [`results.md`](results.md) adds how many people chose each option.
 
-**The two lowest points of the ease-of-use scale are a reconstruction.** Nobody
-chose them and the option list of that question was not kept, so their wording
-is inferred. An option nobody chose contributes no rating, so nothing here
-depends on it.
+**The two lowest points of the ease-of-use scale are inferred.** Nobody chose
+them and the option list of that question was not kept, so their wording is a
+reconstruction; no rating depends on it.
 
 Standard deviations are sample standard deviations (n-1).
 
-**One detail worth knowing if you reuse the raw files:** the forms stored
-"Muy Fácil" and "Muy fácil" as two different strings. They are the same
-answer. Counting them separately splits the parents' 76 % into 39 % and 36 %.
-The script normalises capitalisation and accents before counting.
+If you reuse the raw files, note that the forms stored "Muy Fácil" and
+"Muy fácil" as two different strings for the same answer. The script normalises
+capitalisation and accents before counting.
 
 ---
 
@@ -143,16 +138,13 @@ is not the respondent's own role scores **0.43 lower**.
 | 5 | Overall usefulness for their role | quality | **4.50** | 0.58 |
 | 2 | Provided the information needed to supervise activities | agreement | **4.25** | 0.96 |
 
-**With n = 4, each coordinator is 25 % of the result.** These means should
-always be read with the n beside them.
+**With n = 4, each coordinator is 25 % of the result.**
 
 The lowest-rated item across all three questionnaires is coordinators' item 2,
-whether the application gave them the information needed to *supervise*
-activities. It is the only item in that group where anyone answered "Maybe".
-
-**It is the lowest by 0.02**, over the parents' item 2 at 4.27, and it rests on
-four people. What makes it worth reporting is not the ranking but what it asks:
-it is the item closest to the purpose the system is built for.
+at 4.25, whether the application gave them the information needed to
+*supervise* activities. It is the only item in that group where anyone answered
+"Maybe", and it is lower than the parents' item 2 by 0.02, over four
+respondents.
 
 ---
 
@@ -173,9 +165,7 @@ Other limits of this evaluation:
 - **Nothing longitudinal.** The files carry no timestamps, so not even the
   order or dates of the responses can be established.
 - **Nothing per center.** The files do not record which center a respondent
-  belongs to. Unlike the three above, this one is not a limitation the paper
-  discusses — the paper does not compare centers — but it constrains anyone
-  reusing these files.
+  belongs to, so no per-center comparison is possible.
 
 This is why the paper reports the survey as capturing perceived usability and
 usefulness **rather than long-term adoption or operational impact**, and lists

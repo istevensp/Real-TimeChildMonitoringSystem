@@ -80,7 +80,7 @@ The wearable bracelet provides monitoring data such as location, pulse, battery 
 > **The bracelet firmware is not part of this repository.** What is published
 > here is the backend, the mobile application, the database schema and the
 > evaluation data. The backend receives the danger status already computed by
-> the device, so how the device decides it cannot be verified from this code.
+> the device.
 
 ---
 
@@ -210,11 +210,6 @@ python app.py
 
 By default, Flask will run the backend locally.
 
-> **Note:** the published `app.py` uses single underscores where Python
-> expects double ones — `Flask(_name_)` on line 8, and
-> `if _name_ == '_main_'` on line 406 — so it fails on import and the command
-> above starts nothing. Fix all three before the first run.
-
 ### 6. Run the Flutter Application
 
 Inside the Flutter project directory, run:
@@ -242,16 +237,14 @@ perceived usability and usefulness, not adoption.
 | Coordinators | 4 | 28 | 4.71 | 0.53 | 96 % |
 | **All** | **48** | **369** | **4.58** | **0.67** | **90 %** |
 
-The highest-rated items included the willingness to recommend the application
-and the location view, top-rated by tutors and coordinators. The lowest, at 4.25, was whether the application gave
-coordinators the information they need to supervise activities — which is the
-item closest to the purpose the system is built for, and it comes from only
-four people.
+The highest-rated items were the willingness to recommend the application and
+the location view, top-rated by tutors and coordinators. The lowest, at 4.25
+over four coordinators, was whether the application gave them the information
+they need to supervise activities.
 
-**No rating in any questionnaire fell below the neutral midpoint.** The minimum
-of all 369 ratings is 3. That is consistent with courtesy bias in a
-demonstration setting, and it is reported as a limitation rather than left for
-the reader to notice.
+**No rating in any questionnaire fell below the neutral midpoint**: the minimum
+of all 369 ratings is 3, which is consistent with courtesy bias in a
+demonstration setting.
 
 📄 **[Full evaluation: method, every item, and limitations](evaluation/EvaluationDescription.md)**
 
@@ -260,8 +253,7 @@ the reader to notice.
 - [`evaluation/data/questions.md`](evaluation/data/questions.md) — every
   question and response scale, in English and in the original Spanish.
 - [`evaluation/analyze_surveys.py`](evaluation/analyze_surveys.py) — reads the
-  three response files and recomputes everything; it holds no precomputed
-  numbers.
+  three response files and recomputes every figure reported here.
 
 ---
 
