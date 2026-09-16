@@ -1,234 +1,186 @@
-# 👶 Real-Time Child Monitoring System — Baby ESPOL Child Development Center
+# A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System for Smart Childcare Centers
 
-[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-Backend-black.svg)](https://flask.palletsprojects.com/)
-[![Flutter](https://img.shields.io/badge/Flutter-Mobile-02569B.svg)](https://flutter.dev/)
-[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1.svg)](https://www.mysql.com/)
-[![Status](https://img.shields.io/badge/status-research%20prototype-yellow.svg)]()
+Implementation artifacts of a child monitoring prototype built for the Baby
+ESPOL Child Development Center: a **Flask REST API of 25 endpoints**, a **MySQL
+schema of 9 tables**, and a **Flutter mobile application** that gives parents,
+tutors and coordinators a different view of the same records. The prototype was
+evaluated with **48 participants at two child development centers** in
+Guayaquil, Ecuador, and the responses and the analysis are published here.
 
-A prototype mobile and backend system built to support real-time child monitoring at the Baby ESPOL Child Development Center. The project integrates a **Flutter**-based mobile application, a **Flask** backend service, and a **MySQL** database to manage children, users, bracelets, activities, announcements, photos, messages, and alert notifications.
+Accepted as a poster at the 2026 IEEE International Smart Cities Conference
+(ISC2).
 
-This repository contains the implementation artifacts associated with the research paper:
+## Survey results
 
-> **"A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System for Smart Childcare Centers"**
->
-> Accepted as a poster at IEEE ISC2 2026.
+The 48 participants — 33 parents, 11 tutors and 4 coordinators — explored the
+application and answered a questionnaire written for their role. Across **369
+ratings the mean was 4.58 out of 5** (SD 0.67), 90 % of the ratings were 4 or 5,
+and none fell below the neutral midpoint. Everything behind those numbers is in
+[`evaluation/`](evaluation/EvaluationDescription.md):
 
-The prototype was evaluated with **48 participants at two child development
-centers** — 33 parents, 11 tutors and 4 coordinators — who explored the
-application and answered a questionnaire for their role. The raw responses, the
-analysis script and the results are in
-[`evaluation/`](evaluation/EvaluationDescription.md), so every figure the paper
-reports about the survey can be recomputed from this repository.
+| | |
+|---|---|
+| [`EvaluationDescription.md`](evaluation/EvaluationDescription.md) | the method, every item and the limitations of the evaluation |
+| [`results.md`](evaluation/results.md) | every item with its scale, the answers people chose, mean, median and SD |
+| [`data/questions.md`](evaluation/data/questions.md) | every question and response scale, in English beside the Spanish original |
+| [`analyze_surveys.py`](evaluation/analyze_surveys.py) | recomputes every figure above from the three response files |
+| [`data/*.xlsx`](evaluation/data) | the raw responses, one file per role |
 
----
+The section [*Usability evaluation*](#usability-evaluation) below breaks the
+results down by group and says how to reproduce them.
 
-## 📑 Table of Contents
+## How the pieces fit
 
-- [Project Overview](#-project-overview)
-- [System Architecture](#-system-architecture)
-- [Main Features](#-main-features)
-- [Technologies Used](#-technologies-used)
-- [Repository Structure](#-repository-structure)
-- [Installation and Execution](#-installation-and-execution)
-- [Usability Evaluation](#-usability-evaluation)
-- [Additional Documentation](#-additional-documentation)
-- [Security Notice](#-security-notice)
-- [Research Context](#-research-context)
-- [License](#-license)
-- [Authors](#-authors)
-
----
-
-## 📋 Project Overview
-
-The system was designed to improve child supervision through a digital platform that connects three main components:
-
-### 1. Mobile Application
-- Developed using **Flutter**.
-- Provides a cross-platform interface for representatives, tutors, and coordinators.
-- Allows users to consult child information, view activities, receive announcements, and access monitoring data.
-
-### 2. Backend Service
-- Implemented in **Python** using the **Flask** framework.
-- Exposes API endpoints for communication between the mobile application, the database, and the wearable bracelet.
-- Handles user authentication, child management, bracelet updates, activity records, photo uploads, announcements, messages, and alert notifications.
-
-### 3. Database
-- Implemented in **MySQL**.
-- Stores users, children, bracelets, classes, user-child assignments, activities, photos, announcements, and messages.
-- Defines the relationships required to manage role-based access and child monitoring records.
-
----
-
-## 🏗️ System Architecture
-
-The prototype follows a three-layer software architecture connected to a wearable monitoring device:
+A wearable bracelet reports location, heart rate, battery level and a danger
+status over the cellular network. The backend receives those readings, stores
+them, and notifies the authorized representatives by e-mail when the bracelet
+reports a distance-related risk condition. The mobile application never reaches
+the database directly: every read and write goes through the API.
 
 ```text
-Wearable Bracelet ──▶ Flask Backend API ──▶ MySQL Database
+Wearable bracelet ──▶ Flask REST API ──▶ MySQL
                             ▲
                             │
-                   Flutter Mobile Application
+                   Flutter mobile application
 ```
 
-The mobile application never reaches the database directly: every read and
-write goes through the backend API.
+Indoor location comes from Bluetooth beacons with fixed coordinates, placed in
+each classroom and in the playground. The bracelet identifies the nearest beacon
+and reports its coordinates through the cellular module, which is what fills the
+`latitud` and `longitud` fields of the `bracelet` table and gives room-level
+granularity where satellite positioning does not reach.
 
-The wearable bracelet provides monitoring data such as location, pulse, battery level, and danger status. Indoor location comes from low-power Bluetooth beacons with fixed coordinates, placed in each classroom and in the playground: the bracelet identifies the nearest beacon and reports its coordinates through the cellular module. This gives room-level granularity indoors, where satellite positioning does not reach, and is what fills the `latitud` and `longitud` fields of the `bracelet` table. The backend receives and stores this information in the database. The mobile application consumes the backend endpoints to display child information, activities, announcements, and alerts to authorized users.
+**The bracelet firmware is not part of this repository.** What is published here
+is the backend, the mobile application, the database schema and the evaluation
+data. The backend receives the danger status already computed by the device.
 
-> **The bracelet firmware is not part of this repository.** What is published
-> here is the backend, the mobile application, the database schema and the
-> evaluation data. The backend receives the danger status already computed by
-> the device.
-
----
-
-## ✨ Main Features
-
-- 🔐 User login and registration.
-- 👥 Role-based user management for:
-  - Representatives
-  - Tutors
-  - Coordinators
-- 🧒 Child profile registration, editing, and deletion.
-- 📡 Bracelet data management, including:
-  - Latitude
-  - Longitude
-  - Heart rate
-  - Battery level
-  - Danger status
-- 🚨 Alert generation when a child is detected outside the allowed range.
-- 📧 Email notification to representatives in case of danger alerts.
-- 📅 Activity publication by class.
-- 📷 Photo upload and association with activities.
-- 📢 Announcement publication.
-- 💬 Message registration associated with announcements.
-- 🏫 Class-based information filtering.
-
----
-
-## 🛠️ Technologies Used
-
-| Category | Technologies |
-|---|---|
-| Mobile | Flutter, Dart, Android, Kotlin |
-| Backend | Python, Flask, PyMySQL, Yagmail |
-| Database | MySQL |
-
----
-
-## 📂 Repository Structure
+## Repository structure
 
 ```text
 .
-├── Readme.md
-├── BackendDescription.md
-├── DatabaseDescription.md
-├── app.py                     Flask backend service
-├── mysql.txt                  database schema and seed data
-├── baby_espol/                Flutter mobile application
-│   ├── lib/                   application source
+├── app.py                        Flask REST API, 25 endpoints
+├── schema.sql                    database schema and seed data
+├── LICENSE                       AGPL-3.0-only, for the code
+├── BackendDescription.md         the API endpoint by endpoint
+├── DatabaseDescription.md        tables, keys and relations
+├── baby_espol/                   Flutter mobile application
+│   ├── lib/
+│   │   ├── main.dart
+│   │   ├── datos/                models: child, user, bracelet, activity, message
+│   │   ├── estilo/               shared widgets and styles
+│   │   └── screen/               one folder per module
 │   ├── assets/
-│   ├── android/  ios/  linux/  macos/
+│   ├── android/ ios/ linux/ macos/ web/ windows/
 │   └── pubspec.yaml
-└── evaluation/                usability survey data and analysis
-    ├── EvaluationDescription.md   method, results and limitations
-    ├── analyze_surveys.py     computes the statistics from the raw responses
-    ├── results.md             every item with its mean, median and SD
-    └── data/                  the three questionnaire exports
-        └── questions.md       every item in Spanish and English
+└── evaluation/                   usability survey data and analysis
+    ├── LICENSE                   CC BY 4.0, for the survey material
+    ├── EvaluationDescription.md  method, results and limitations
+    ├── analyze_surveys.py        computes the statistics from the raw responses
+    ├── results.md                every item with its mean, median and SD
+    └── data/
+        ├── questions.md          every item and scale, in English and Spanish
+        ├── parents_responses.xlsx
+        ├── tutors_responses.xlsx
+        └── coordinators_responses.xlsx
 ```
 
----
+Four paths are deliberately **not** tracked: `.env` with the local
+configuration, `photos/` where the backend writes activity images at run time,
+`__pycache__/`, and the Flutter `build/` and `.dart_tool/` directories, which
+`flutter pub get` and `flutter build` regenerate.
 
-## 🚀 Installation and Execution
+## Requirements
 
-### 1. Clone the Repository
+| | |
+|---|---|
+| Python | 3.8+ |
+| Backend packages | `flask`, `pymysql`, `yagmail` |
+| MySQL | 5.7+ |
+| Flutter | Dart SDK `>=3.1.2 <4.0.0` |
+| Survey script | `openpyxl`, and nothing else |
+
+## Quick start
+
+### 1. Clone
 
 ```bash
 git clone https://github.com/istevensp/Real-TimeChildMonitoringSystem.git
 cd Real-TimeChildMonitoringSystem
 ```
 
-### 2. Create the MySQL Database
+### 2. Create the database
 
-Open MySQL and execute the script contained in:
+Run `schema.sql` in MySQL. It drops and recreates `baby_espol`, defines the nine
+tables and inserts sample data:
 
-```text
-mysql.txt
+```bash
+mysql -u root -p < schema.sql
 ```
 
-This script creates the `baby_espol` database, defines the required tables, and inserts sample data.
-
-### 3. Install Backend Dependencies
-
-Create a Python virtual environment:
+### 3. Install the backend dependencies
 
 ```bash
 python -m venv venv
-```
-
-Activate it:
-
-```bash
-# Windows
-venv\Scripts\activate
-
-# Linux / macOS
-source venv/bin/activate
-```
-
-Install the required dependencies:
-
-```bash
+source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install flask pymysql yagmail
 ```
 
-### 4. Configure the Backend
+### 4. Configure
 
-Edit the database connection parameters in `app.py`:
+The backend reads every deployment-specific value from the environment, so no
+credential and no machine-specific path is stored in `app.py`:
 
-```python
-db = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='your_password',
-    database='baby_espol'
-)
-```
+| Variable | Meaning |
+|---|---|
+| `BABY_ESPOL_DB_HOST` | MySQL host (default `localhost`) |
+| `BABY_ESPOL_DB_USER` | MySQL user (default `root`) |
+| `BABY_ESPOL_DB_PASSWORD` | MySQL password |
+| `BABY_ESPOL_DB_NAME` | database name (default `baby_espol`) |
+| `BABY_ESPOL_MAIL_SENDER` | address used to send the alert e-mails |
+| `BABY_ESPOL_MAIL_PASSWORD` | application password of that account |
+| `BABY_ESPOL_PHOTO_PATH` | directory for activity photos (default `./photos`) |
 
-Also configure the email sender credentials used for alerts.
+`BABY_ESPOL_MAIL_PASSWORD` is a Google application password, not the account
+password.
 
-> ⚠️ **Important:** Do not upload real credentials, passwords, or email app passwords to a public repository. Use environment variables instead (e.g., a `.env` file excluded via `.gitignore`).
-
-### 5. Run the Backend
+### 5. Run the backend
 
 ```bash
 python app.py
 ```
 
-By default, Flask will run the backend locally.
+Flask serves on `localhost:5000` in debug mode. `BABY_ESPOL_PHOTO_PATH` is
+created on demand, one directory per activity.
 
-### 6. Run the Flutter Application
-
-Inside the Flutter project directory, run:
+### 6. Run the mobile application
 
 ```bash
+cd baby_espol
 flutter pub get
 flutter run
 ```
 
-Make sure the mobile application is configured to point to the correct backend URL.
+Point the application at the backend URL of your environment before running it.
 
----
+## The API
 
-## 📊 Usability Evaluation
+`app.py` exposes 25 endpoints covering users and authentication, children and
+their representatives, bracelet readings, activities with photographic evidence,
+announcements and messages. [`BackendDescription.md`](BackendDescription.md)
+documents them one by one and
+[`DatabaseDescription.md`](DatabaseDescription.md) describes the nine tables and
+how they relate.
 
-Three questionnaires were used, one per role, all on five-point Likert scales.
-Participants explored the application and its functions before answering;
-**they did not use it during a normal working day**, so the survey measures
-perceived usability and usefulness, not adoption.
+**Twenty-four of the twenty-five are `GET`**, including the ones that create,
+edit and delete records; only photo upload is a `POST`. That is a property of
+the prototype, not a recommendation — see *Security* below.
+
+## Usability evaluation
+
+Three questionnaires, one per role, all on five-point Likert scales.
+Participants explored the application and its functions before answering; they
+did not use it during a normal working day, so the survey measures perceived
+usability and usefulness, not adoption.
 
 | Group | n | Ratings | Mean | SD | 4 or 5 |
 |---|---|---|---|---|---|
@@ -238,74 +190,83 @@ perceived usability and usefulness, not adoption.
 | **All** | **48** | **369** | **4.58** | **0.67** | **90 %** |
 
 The highest-rated items were the willingness to recommend the application and
-the location view, top-rated by tutors and coordinators. The lowest, at 4.25
-over four coordinators, was whether the application gave them the information
-they need to supervise activities.
-
-**No rating in any questionnaire fell below the neutral midpoint**: the minimum
-of all 369 ratings is 3, which is consistent with courtesy bias in a
+the location view. The lowest, at 4.25 over four coordinators, was whether the
+application gave them the information they need to supervise activities. The
+minimum of all 369 ratings is 3, which is consistent with courtesy bias in a
 demonstration setting.
 
-📄 **[Full evaluation: method, every item, and limitations](evaluation/EvaluationDescription.md)**
+To recompute every figure above from the raw responses:
 
-- [`evaluation/results.md`](evaluation/results.md) — every item with its scale,
-  the answers people chose, mean, median and standard deviation.
-- [`evaluation/data/questions.md`](evaluation/data/questions.md) — every
-  question and response scale, in English and in the original Spanish.
-- [`evaluation/analyze_surveys.py`](evaluation/analyze_surveys.py) — reads the
-  three response files and recomputes every figure reported here.
+```bash
+cd evaluation
+pip install openpyxl
+python analyze_surveys.py
+```
 
----
+The script reads only the three files in `evaluation/data/` and rewrites
+`results.md`, so two runs produce identical output. The response files carry no
+identifying information: no names, no e-mail addresses, no timestamps and no
+free-text fields.
 
-## 📚 Additional Documentation
+## Security
 
-For a more detailed technical explanation, see:
+This is a **research prototype**, evaluated in demonstrations rather than
+operated with real children's data. What that means concretely:
 
-- [Backend Description](BackendDescription.md)
-- [Database Description](DatabaseDescription.md)
-- [Usability Evaluation](evaluation/EvaluationDescription.md) — the three questionnaires, the
-  raw responses of the 48 participants, and the script that computes the
-  statistics reported in the paper
+- No credential is tracked any more. The backend reads them from the
+  environment, and `.env` is git-ignored.
+- **Earlier values remain in the git history.** A database password and a Google
+  application password were committed, and anything ever committed must be
+  treated as disclosed and rotated, not merely removed.
+- Passwords are stored in plain text in the `user` table.
+- SQL statements are built by string interpolation, so the endpoints are open to
+  injection.
+- The endpoints that modify data answer to `GET`, which makes them reachable
+  from any link or prefetch.
+- There is no transport encryption and no authentication token; the mobile
+  application authenticates users, so authorization lives in the client rather
+  than in the backend.
 
----
+Before any deployment: rotate the credentials and rewrite the history, hash the
+stored passwords, parameterize every query, move the modifying endpoints to
+`POST`, `PUT` and `DELETE`, enable HTTPS, and move authentication and
+authorization into the backend.
 
-## 🔒 Security Notice
+## Citation
 
-> ⚠️ **This repository currently contains live credentials in source
-> files**, in `app.py` and in the first lines of `mysql.txt`: a database
-> password and a Google application password. **Treat them as compromised.**
-> They need to be revoked and removed from the working tree *and* from the git
-> history; deleting them in a new commit is not enough, because the old commits
-> still carry them.
+```bibtex
+@inproceedings{Santillan2026ChildMonitoring,
+  author    = {Steven Santillan and Maria Fernanda Panchana Ochoa and
+               Sandra Coello Suarez and Christopher Vaccaro},
+  title     = {A Real-Time IoT-Based Child Safety and Wellbeing Monitoring
+               System for Smart Childcare Centers},
+  booktitle = {2026 IEEE International Smart Cities Conference (ISC2)},
+  year      = {2026}
+}
+```
 
-This repository corresponds to a **research prototype**. Before using it in a production environment, the following improvements are recommended:
+Update the entry with the pages and DOI once they are assigned.
 
-- [ ] Replace plain-text passwords with hashed passwords (bcrypt/argon2).
-- [ ] Move database and email credentials to environment variables.
-- [ ] Replace GET requests that modify data with POST, PUT, or DELETE methods.
-- [ ] Use parameterized SQL queries to prevent SQL injection.
-- [ ] Add authentication tokens for protected endpoints.
-- [ ] Enable HTTPS for backend communication.
-- [ ] Improve error handling and logging.
-- [ ] Avoid storing sensitive information directly in source code.
+## Authors
 
----
+Steven Santillan, Maria Fernanda Panchana Ochoa, Sandra Coello Suarez and
+Christopher Vaccaro — Faculty of Electrical and Computer Engineering, Escuela
+Superior Politécnica del Litoral (ESPOL), Guayaquil, Ecuador.
 
-## 🔬 Research Context
+## License
 
-This project was developed as part of a research work focused on the design and implementation of a real-time child monitoring system for the Baby ESPOL Child Development Center. The prototype demonstrates how wearable devices, mobile applications, backend services, and relational databases can be integrated to support child safety, institutional communication, and monitoring record management.
+GNU Affero General Public License v3.0 only (AGPL-3.0-only). You may use,
+study, modify and redistribute this software under its terms; if you modify it
+and make it available to users over a network, you must also give those users
+access to the corresponding source of your modified version. This covers the
+backend, the mobile application and the database schema. See
+[LICENSE](LICENSE) for the full text.
 
----
+The evaluation material in [`evaluation/`](evaluation) — the questionnaire
+responses, the items and scales, and the reported results — is released under
+**Creative Commons Attribution 4.0 International (CC BY 4.0)** instead, so it
+can be reused and cited as research data; see
+[`evaluation/LICENSE`](evaluation/LICENSE). The script that computes the
+statistics is code and stays under the AGPL.
 
-## 📄 License
-
-This project is intended for academic and research purposes. The final license should be defined according to the repository owner's publication and distribution requirements.
-
----
-
-## 👤 Authors
-
-Developed at Escuela Superior Politécnica del Litoral (ESPOL), Guayaquil,
-Ecuador, as part of the research work behind:
-
-**A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System for Smart Childcare Centers**
+Third-party libraries keep their own licenses.

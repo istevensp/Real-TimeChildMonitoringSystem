@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Local configuration and credentials
+.env
+
+# Activity photos written by the backend at run time
+photos/

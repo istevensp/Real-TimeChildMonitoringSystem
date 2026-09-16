@@ -1,6 +1,4 @@
-espolbaby@gmail.com
-Admi_123
-DROP DATABASE baby_espol;
+DROP DATABASE IF EXISTS baby_espol;
 CREATE DATABASE IF NOT EXISTS baby_espol;
 
 USE baby_espol;

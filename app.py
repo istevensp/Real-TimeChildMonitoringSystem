@@ -1,22 +1,37 @@
 from flask import Flask, request, jsonify
-import subprocess
+import os
+import shutil
 import pymysql
 import yagmail
 
-path = "/run/user/1000/gvfs/google-drive:host=gmail.com,user=espol.baby/0AE5zgfuPuhc7Uk9PVA/Imagenes/"
+# Deployment settings come from the environment: credentials and the photo
+# directory depend on the machine and do not belong in the source file.
+PHOTO_PATH = os.environ.get('BABY_ESPOL_PHOTO_PATH', './photos')
+DB_HOST = os.environ.get('BABY_ESPOL_DB_HOST', 'localhost')
+DB_USER = os.environ.get('BABY_ESPOL_DB_USER', 'root')
+DB_PASSWORD = os.environ.get('BABY_ESPOL_DB_PASSWORD', '')
+DB_NAME = os.environ.get('BABY_ESPOL_DB_NAME', 'baby_espol')
+MAIL_SENDER = os.environ.get('BABY_ESPOL_MAIL_SENDER', '')
+MAIL_PASSWORD = os.environ.get('BABY_ESPOL_MAIL_PASSWORD', '')
 
 app = Flask(__name__)
 db = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='Admi_123',
-    database='baby_espol',
+    host=DB_HOST,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    database=DB_NAME,
     cursorclass=pymysql.cursors.DictCursor
 )
 
+def activity_dir(id_act):
+    # id_act arrives in the request and is used to build a directory that gets
+    # created, listed and deleted, so it is forced to an integer first: a value
+    # such as "../x" would otherwise reach outside PHOTO_PATH.
+    return os.path.join(PHOTO_PATH, str(int(id_act)))
+
 def enviar_correo(correo, asunto, mensaje):
-    sender_email = "espolbaby@gmail.com"
-    sender_password = "uxdq qmmh auin zknt"
+    sender_email = MAIL_SENDER
+    sender_password = MAIL_PASSWORD
     yag = yagmail.SMTP(sender_email, sender_password)
     to = correo
     subject = asunto
@@ -195,8 +210,7 @@ def delete_activity():
             sql_act = f"DELETE FROM activity WHERE id_act = '{id_act}'"
             cursor.execute(sql_act)
             db.commit()
-            comando = ["rm", "-rf", path+str(id_act)]
-            subprocess.run(comando)
+            shutil.rmtree(activity_dir(id_act), ignore_errors=True)
 
         return jsonify({'delete_activity':'correcto'})
     except Exception as es:
@@ -207,11 +221,11 @@ def new_photo():
     enlace = request.data
     id_act = request.args.get('id_act')
     numero = request.args.get('numero')
-    with open(path+str(id_act)+"/"+numero+".jpg", 'wb') as archivo:
+    carpeta = activity_dir(id_act)
+    numero = str(int(numero))
+    with open(os.path.join(carpeta, numero+".jpg"), 'wb') as archivo:
         archivo.write(enlace)
-    comando = ["ls", path+str(id_act)]
-    lista = subprocess.run(comando, capture_output=True, text=True)
-    elementos = lista.stdout.strip().split('\n')
+    elementos = sorted(os.listdir(carpeta))
     indice = elementos[int(numero)-1]
     try:
         with db.cursor() as cursor:
@@ -233,8 +247,7 @@ def new_activity():
             cursor.execute(sql)
             db.commit()
             id_act = cursor.lastrowid
-            comando = ["mkdir", path+str(id_act)]
-            subprocess.run(comando)
+            os.makedirs(activity_dir(id_act), exist_ok=True)
         return jsonify({'new_activity':id_act})
     except Exception as es:
         return jsonify({'error':'error'})

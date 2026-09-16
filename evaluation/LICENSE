@@ -1,0 +1,31 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Steven Santillan, Maria Fernanda Panchana Ochoa,
+Sandra Coello Suarez and Christopher Vaccaro.
+Escuela Superior Politecnica del Litoral (ESPOL), Guayaquil, Ecuador.
+
+This license covers the contents of this directory: the questionnaire
+responses in data/, the questionnaire items and response scales, and the
+reported results. The rest of the repository, including
+analyze_surveys.py, is licensed under the GNU Affero General Public
+License v3.0 only; see ../LICENSE.
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit, link to the license,
+and indicate if changes were made.
+
+Attribution should cite the paper the data comes from:
+
+  S. Santillan, M. F. Panchana Ochoa, S. Coello Suarez and C. Vaccaro,
+  "A Real-Time IoT-Based Child Safety and Wellbeing Monitoring System
+  for Smart Childcare Centers," 2026 IEEE International Smart Cities
+  Conference (ISC2), 2026.
+
+The full legal code of this license is at:
+
+  https://creativecommons.org/licenses/by/4.0/legalcode
+
+A human-readable summary, which is not a substitute for the license, is
+at:
+
+  https://creativecommons.org/licenses/by/4.0/

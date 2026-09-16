@@ -18,10 +18,11 @@ five-point Likert scale.
 
 ---
 
-## What is here
+## Contents
 
 ```text
 evaluation/
+├── LICENSE                    CC BY 4.0, covering the material in this folder
 ├── EvaluationDescription.md   this file
 ├── analyze_surveys.py         converts answers to 1-5 and computes the statistics
 ├── results.md                 every item: scale, answers chosen, mean, median, SD
@@ -41,9 +42,6 @@ surveys were administered in Spanish, and the recorded answers are the raw
 data, so they are left exactly as the forms stored them and mapped to 1-5 by
 the script. [`data/questions.md`](data/questions.md) lists every item in both
 languages so the translation can be checked.
-
-Nothing in the files records which of the two centers a respondent came from,
-so no per-center comparison is possible.
 
 ---
 
@@ -138,7 +136,7 @@ is not the respondent's own role scores **0.43 lower**.
 | 5 | Overall usefulness for their role | quality | **4.50** | 0.58 |
 | 2 | Provided the information needed to supervise activities | agreement | **4.25** | 0.96 |
 
-**With n = 4, each coordinator is 25 % of the result.**
+With n = 4, each coordinator is 25 % of the result.
 
 The lowest-rated item across all three questionnaires is coordinators' item 2,
 at 4.25, whether the application gave them the information needed to
@@ -152,9 +150,8 @@ respondents.
 
 **No negative rating exists in the data.** The minimum of all 369 ratings is
 3: on none of the five scales, in none of the three questionnaires, did anyone
-choose an option below the midpoint. This is consistent with **courtesy bias**
-in a demonstration setting, and the paper reports it as such rather than
-presenting the 4.6 average on its own.
+choose an option below the midpoint. This is consistent with courtesy bias in a
+demonstration setting.
 
 Other limits of this evaluation:
 
@@ -167,7 +164,5 @@ Other limits of this evaluation:
 - **Nothing per center.** The files do not record which center a respondent
   belongs to, so no per-center comparison is possible.
 
-This is why the paper reports the survey as capturing perceived usability and
-usefulness **rather than long-term adoption or operational impact**, and lists
-structured usability instruments, task-completion measurements and longitudinal
-use as future work.
+The survey therefore captures perceived usability and usefulness, not long-term
+adoption or operational impact.
